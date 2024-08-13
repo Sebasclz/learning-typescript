@@ -4,6 +4,11 @@ type Abilities = {
   weaknesses: string[]
 }
 
+type Address = {
+  planet: string,
+  city: string,
+}
+
 type HeroId = {
   readonly id?: `${string}-${string}-${string}-${string}-${string}`
 }
@@ -13,6 +18,7 @@ type HeroPowerScale = 'local' | 'universal' | 'planetary' | 'galactic' | 'multiv
 // Type Alias for defining hero properties.
 type HeroProperties = {
   name: string,
+  address: Address,
   abilities: Abilities,
   powerScale: HeroPowerScale,
   age: number, 
@@ -25,6 +31,10 @@ type Hero = HeroProperties & HeroId
 // Creating a hero object based on the Hero type.
 let hero: Hero = {
   name: 'Spiderman',
+  address: {
+    planet: 'Earth',
+    city: 'New York'
+  },
   abilities: {
     superpowers: ['Super strength', 'Flight', 'Electrical manipulation'],
     weaknesses: ['Spider sense']
@@ -47,10 +57,11 @@ superpowers.forEach(superpower => {
 
 // Function to create a hero with default isActive value.
 function createHero(hero: Hero): Hero {
-  const { name, abilities, powerScale, age, isActive = true } = hero
+  const { name, address, abilities, powerScale, age, isActive = true } = hero
   return {
     id: crypto.randomUUID(), // Create a random id for the hero.
     name,
+    address,
     abilities,
     powerScale,
     age,
@@ -61,6 +72,10 @@ function createHero(hero: Hero): Hero {
 // Create a hero instance with the createHero function.
 const spiderman = createHero({
   name: 'Spiderman',
+  address: {
+    planet: 'Earth',
+    city: 'New York'
+  },
   abilities: {
     superpowers: ['Super strength', 'Flight', 'Electrical manipulation'],
     weaknesses: ['Spider sense']
@@ -73,6 +88,10 @@ console.log(spiderman)
 
 const thor = createHero({
   name: 'Thor',
+  address: {
+    planet: 'Asgard',
+    city: 'Midgard'
+  },
   abilities: {
     superpowers: ['Strength', 'Durability', 'Speed'],
     weaknesses: ['Weakness', 'Darkness', 'Loss of hair']
@@ -82,3 +101,33 @@ const thor = createHero({
   isActive: false
 })
 
+// Type indexing
+const addressHero: HeroProperties['address'] = {
+  planet: 'Earth', // Autocompletes with object properties. (address)
+  city: 'New York'
+}
+
+addressHero.planet // 'Earth'
+
+// Type from value
+const address_ = {
+  planet: 'Earth', 
+  city: 'New York'
+}
+
+type Address_ = typeof address_
+
+const Address__: Address_ = {
+  planet: 'Earth', // Autocompletes with object properties. (with typeof)
+  city: 'New York'
+}
+
+// Type from function return
+function createAddress() {
+  return {
+    planet: 'Earth',
+    city: 'New York'
+  }
+}
+
+type Address___ = ReturnType<typeof createAddress> // Return type of createAddress function
